@@ -1,8 +1,9 @@
 --==================================
--- FPLIZ HUB PRO | Inspired Hub
+-- FPLIZ HUB PRO | XENO VERSION
 --==================================
 
-repeat wait() until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
+task.wait(5)
 
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
@@ -13,26 +14,29 @@ local Character = Player.Character or Player.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 local HRP = Character:WaitForChild("HumanoidRootPart")
 
--- UI
+-- LOAD UI (FIX XENO)
 local OrionLib = loadstring(game:HttpGet(
 "https://raw.githubusercontent.com/shlexware/Orion/main/source"
-))()
+,true))()
 
+------------------------------------------------
+-- WINDOW
+------------------------------------------------
 local Window = OrionLib:MakeWindow({
 	Name = "FPLIZ HUB PRO ⛩️",
 	SaveConfig = true,
 	ConfigFolder = "FplizHub",
-	IntroText = "FPLIZ HUB LOADED 🔥"
+	IntroText = "FPLIZ HUB CARREGADO 🔥"
 })
 
 OrionLib:MakeNotification({
 	Name = "FPLIZ HUB",
-	Content = "Carregado com sucesso!",
+	Content = "Executado com sucesso!",
 	Time = 5
 })
 
 ------------------------------------------------
--- ABRIR / FECHAR HUB (RightShift)
+-- KEYBIND (RightShift)
 ------------------------------------------------
 UIS.InputBegan:Connect(function(input,gp)
 	if input.KeyCode == Enum.KeyCode.RightShift then
@@ -48,13 +52,17 @@ local Move = Window:MakeTab({Name="Movimentação ⚡"})
 Move:AddSlider({
 	Name="Speed",
 	Min=16,Max=200,Default=16,
-	Callback=function(v) Humanoid.WalkSpeed=v end
+	Callback=function(v)
+		Humanoid.WalkSpeed=v
+	end
 })
 
 Move:AddSlider({
 	Name="JumpPower",
 	Min=50,Max=200,Default=50,
-	Callback=function(v) Humanoid.JumpPower=v end
+	Callback=function(v)
+		Humanoid.JumpPower=v
+	end
 })
 
 -- Infinite Jump
@@ -62,7 +70,9 @@ local infjump=false
 Move:AddToggle({
 	Name="Infinite Jump",
 	Default=false,
-	Callback=function(v) infjump=v end
+	Callback=function(v)
+		infjump=v
+	end
 })
 
 UIS.JumpRequest:Connect(function()
@@ -76,7 +86,9 @@ local noclip=false
 Move:AddToggle({
 	Name="Noclip",
 	Default=false,
-	Callback=function(v) noclip=v end
+	Callback=function(v)
+		noclip=v
+	end
 })
 
 RunService.Stepped:Connect(function()
@@ -90,7 +102,7 @@ RunService.Stepped:Connect(function()
 end)
 
 ------------------------------------------------
--- FLY (ADMIN STYLE)
+-- FLY
 ------------------------------------------------
 local FlyTab = Window:MakeTab({Name="Fly 🕊️"})
 
@@ -122,17 +134,17 @@ FlyTab:AddToggle({
 })
 
 ------------------------------------------------
--- TROLL
+-- TROLL (FLING)
 ------------------------------------------------
 local Troll = Window:MakeTab({Name="Troll 😈"})
 
 Troll:AddButton({
-	Name="Fling",
+	Name="Fling (encoste no player)",
 	Callback=function()
 		local spin=Instance.new("BodyAngularVelocity",HRP)
 		spin.AngularVelocity=Vector3.new(99999,99999,99999)
 		spin.MaxTorque=Vector3.new(math.huge,math.huge,math.huge)
-		wait(2)
+		task.wait(2)
 		spin:Destroy()
 	end
 })
@@ -147,7 +159,9 @@ local clicktp=false
 Tp:AddToggle({
 	Name="Click TP",
 	Default=false,
-	Callback=function(v) clicktp=v end
+	Callback=function(v)
+		clicktp=v
+	end
 })
 
 local mouse=Player:GetMouse()
@@ -157,22 +171,25 @@ mouse.Button1Down:Connect(function()
 	end
 end)
 
-------------------------------------------------
--- TELEPORTES
-------------------------------------------------
 Tp:AddButton({
 	Name="Banco",
-	Callback=function() HRP.CFrame=CFrame.new(-33,23,-164) end
+	Callback=function()
+		HRP.CFrame=CFrame.new(-33,23,-164)
+	end
 })
 
 Tp:AddButton({
 	Name="Hospital",
-	Callback=function() HRP.CFrame=CFrame.new(120,25,-300) end
+	Callback=function()
+		HRP.CFrame=CFrame.new(120,25,-300)
+	end
 })
 
 Tp:AddButton({
 	Name="Lago",
-	Callback=function() HRP.CFrame=CFrame.new(-330,25,-450) end
+	Callback=function()
+		HRP.CFrame=CFrame.new(-330,25,-450)
+	end
 })
 
 ------------------------------------------------
