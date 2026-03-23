@@ -1,253 +1,192 @@
 --==================================
--- FPLIZ HUB GOD 👑 | KEY VERSION
+-- FPLIZ HUB SUPREMO VIP 👑 | ALL-IN-ONE
 --==================================
 
 repeat task.wait() until game:IsLoaded()
 
-------------------------------------------------
--- SAFE LOAD ORION
-------------------------------------------------
-local OrionLib
-repeat
-	local success
-	success, OrionLib = pcall(function()
-		return loadstring(game:HttpGet(
-			"https://raw.githubusercontent.com/shlexware/Orion/main/source"
-		))()
-	end
-	task.wait(2)
-until OrionLib
+-- SERVICES
+local Players = game:GetService("Players")
+local Player = Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
+local TweenService = game:GetService("TweenService")
 
-------------------------------------------------
--- KEY SYSTEM SAVE 🔐
-------------------------------------------------
+-- CHARACTER LOAD
+local Character, Humanoid, HRP
+local function LoadCharacter(char)
+	Character = char
+	Humanoid = char:WaitForChild("Humanoid")
+	HRP = char:WaitForChild("HumanoidRootPart")
+end
+LoadCharacter(Player.Character or Player.CharacterAdded:Wait())
+Player.CharacterAdded:Connect(LoadCharacter)
 
-local CorrectKey = "FPLIZ-GOD-2026"
-local KeyFile = "FplizKey.txt"
+-- KEY ONLINE
+local KEY_URL = "COLE_AQUI_SEU_LINK_RAW" -- seu link RAW de keys
+local KEY_FILE = "FplizKey.txt"
 local KeyAccepted = false
 
--- verifica se já tem key salva
-if isfile and isfile(KeyFile) then
-	local savedKey = readfile(KeyFile)
-
-	if savedKey == CorrectKey then
-		KeyAccepted = true
+local function CheckKeyOnline(key)
+	local success, result = pcall(function()
+		return game:HttpGet(KEY_URL)
+	end)
+	if not success then warn("Erro ao conectar servidor de keys") return false end
+	for line in string.gmatch(result,"[^\r\n]+") do
+		if line == key then return true end
 	end
+	return false
 end
 
--- se não tiver key válida → pede
+-- verifica key salva
+if isfile and isfile(KEY_FILE) then
+	local saved = readfile(KEY_FILE)
+	if CheckKeyOnline(saved) then KeyAccepted = true end
+end
+
+-- pede key se necessário
 if not KeyAccepted then
+	local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+	local Frame = Instance.new("Frame", ScreenGui)
+	Frame.Size = UDim2.new(0,300,0,150)
+	Frame.Position = UDim2.new(0.5,-150,0.5,-75)
+	Frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
 
-	local KeyWindow = OrionLib:MakeWindow({
-		Name="FPLIZ HUB | KEY SYSTEM 🔐",
-		SaveConfig=false
-	})
+	local Box = Instance.new("TextBox", Frame)
+	Box.Size = UDim2.new(0.8,0,0,40)
+	Box.Position = UDim2.new(0.1,0,0.3,0)
+	Box.PlaceholderText = "Digite sua Key..."
+	Box.Text = ""
 
-	local KeyTab = KeyWindow:MakeTab({Name="Key"})
+	local Button = Instance.new("TextButton", Frame)
+	Button.Size = UDim2.new(0.6,0,0,35)
+	Button.Position = UDim2.new(0.2,0,0.7,0)
+	Button.Text = "Confirmar"
 
-	KeyTab:AddTextbox({
-		Name="Digite a Key",
-		Default="",
-		TextDisappear=false,
-		Callback=function(value)
-
-			if value == CorrectKey then
-				KeyAccepted = true
-
-				-- salva key no PC
-				if writefile then
-					writefile(KeyFile,value)
-				end
-
-				OrionLib:MakeNotification({
-					Name="Key System",
-					Content="Key salva ✅",
-					Time=4
-				})
-
-				task.wait(1)
-				KeyWindow:Destroy()
-
-			else
-				OrionLib:MakeNotification({
-					Name="Key System",
-					Content="Key inválida ❌",
-					Time=4
-				})
-			end
+	Button.MouseButton1Click:Connect(function()
+		local key = Box.Text
+		if CheckKeyOnline(key) then
+			KeyAccepted = true
+			if writefile then writefile(KEY_FILE,key) end
+			ScreenGui:Destroy()
+		else
+			Button.Text = "Key inválida ❌"
+			task.wait(2)
+			Button.Text = "Confirmar"
 		end
-	})
+	end)
 
 	repeat task.wait() until KeyAccepted
 end
-------------------------------------------------
--- CHARACTER FIX
-------------------------------------------------
-local Character,Humanoid,HRP
 
-local function LoadChar(char)
-	Character=char
-	Humanoid=char:WaitForChild("Humanoid")
-	HRP=char:WaitForChild("HumanoidRootPart")
-end
+-- ABERTURA PREMIUM
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(1,0,1,0)
+Frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
 
-LoadChar(Player.Character or Player.CharacterAdded:Wait())
-Player.CharacterAdded:Connect(LoadChar)
+local TextLabel = Instance.new("TextLabel", Frame)
+TextLabel.Size = UDim2.new(0.6,0,0.2,0)
+TextLabel.Position = UDim2.new(0.2,0,0.4,0)
+TextLabel.Text = "FPLIZ HUB SUPREMO VIP"
+TextLabel.TextColor3 = Color3.fromRGB(255,215,0)
+TextLabel.TextScaled = true
+TextLabel.Font = Enum.Font.GothamBold
+TextLabel.BackgroundTransparency = 1
+TextLabel.TextStrokeTransparency = 0
+TextLabel.TextTransparency = 1
 
-------------------------------------------------
--- MAIN WINDOW 👑
-------------------------------------------------
-local Window=OrionLib:MakeWindow({
-	Name="FPLIZ HUB GOD 👑",
-	SaveConfig=true,
-	ConfigFolder="FplizGod"
-})
+local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local tweenIn = TweenService:Create(TextLabel, tweenInfo, {TextTransparency=0})
+local tweenOut = TweenService:Create(TextLabel, tweenInfo, {TextTransparency=1})
 
-OrionLib:MakeNotification({
-	Name="FPLIZ HUB",
-	Content="GOD LOADED 🔥",
-	Time=5
-})
+tweenIn:Play()
+tweenIn.Completed:Wait()
+task.wait(1)
+tweenOut:Play()
+tweenOut.Completed:Wait()
+ScreenGui:Destroy()
 
-------------------------------------------------
+-- ORION UI LOAD
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local Window = OrionLib:MakeWindow({Name="FPLIZ HUB SUPREMO VIP 👑", SaveConfig=true, ConfigFolder="FplizSupremo"})
+OrionLib:MakeNotification({Name="FPLIZ HUB", Content="Sistema carregado com estilo PREMIUM ✅", Time=5})
+
 -- UI TOGGLE
-------------------------------------------------
-UIS.InputBegan:Connect(function(i,gp)
-	if not gp and i.KeyCode==Enum.KeyCode.RightShift then
+UIS.InputBegan:Connect(function(input,gp)
+	if not gp and input.KeyCode == Enum.KeyCode.RightShift then
 		OrionLib:ToggleUI()
 	end
 end)
 
-------------------------------------------------
--- ANTI AFK
-------------------------------------------------
-Player.Idled:Connect(function()
-	VirtualUser:Button2Down(Vector2.new())
-	task.wait(1)
-	VirtualUser:Button2Up(Vector2.new())
-end)
-
-------------------------------------------------
 -- PLAYER TAB
-------------------------------------------------
-local PlayerTab=Window:MakeTab({Name="Player ⚡"})
-
-local speed=16
-local jump=50
-local noclip=false
-local infjump=false
-
-PlayerTab:AddSlider({
-	Name="Speed",Min=16,Max=300,Default=16,
-	Callback=function(v) speed=v end
-})
-
-PlayerTab:AddSlider({
-	Name="JumpPower",Min=50,Max=300,Default=50,
-	Callback=function(v) jump=v end
-})
-
-PlayerTab:AddToggle({
-	Name="Infinite Jump",
-	Callback=function(v) infjump=v end
-})
-
-PlayerTab:AddToggle({
-	Name="Noclip",
-	Callback=function(v) noclip=v end
-})
+local PlayerTab = Window:MakeTab({Name="Player ⚡"})
+local WalkSpeed, JumpPower, InfiniteJump = 16,50,false
+PlayerTab:AddSlider({Name="WalkSpeed",Min=8,Max=100,Default=16,Callback=function(v) WalkSpeed=v end})
+PlayerTab:AddSlider({Name="JumpPower",Min=30,Max=120,Default=50,Callback=function(v) JumpPower=v end})
+PlayerTab:AddToggle({Name="Infinite Jump",Callback=function(v) InfiniteJump=v end})
 
 RunService.RenderStepped:Connect(function()
 	if Humanoid then
-		Humanoid.WalkSpeed=speed
-		Humanoid.JumpPower=jump
+		Humanoid.WalkSpeed = WalkSpeed
+		Humanoid.JumpPower = JumpPower
 	end
 end)
-
 UIS.JumpRequest:Connect(function()
-	if infjump then
-		Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-	end
+	if InfiniteJump and Humanoid then Humanoid:ChangeState(Enum.HumanoidStateType.Jumping) end
 end)
 
-RunService.Stepped:Connect(function()
-	if noclip and Character then
-		for _,v in pairs(Character:GetDescendants()) do
-			if v:IsA("BasePart") then
-				v.CanCollide=false
-			end
-		end
-	end
-end)
+-- TELEPORT TAB
+local TpTab = Window:MakeTab({Name="Teleport 📍"})
+TpTab:AddButton({Name="Teleport Spawn",Callback=function() if HRP then HRP.CFrame=CFrame.new(0,10,0) end end})
+TpTab:AddButton({Name="Rejoin Server",Callback=function() TeleportService:Teleport(game.PlaceId,Player) end})
 
-------------------------------------------------
--- FLY GOD 🕊️
-------------------------------------------------
-local FlyTab=Window:MakeTab({Name="Fly 🕊️"})
-
+-- FLY TAB
+local FlyTab = Window:MakeTab({Name="Fly 🕊️"})
 local flying=false
 local flyspeed=90
 local bv,bg
+local FlyConnection
+FlyTab:AddSlider({Name="Fly Speed",Min=20,Max=250,Default=90,Callback=function(v) flyspeed=v end})
+FlyTab:AddToggle({Name="Fly",Callback=function(state)
+	flying=state
+	if flying then
+		bv=Instance.new("BodyVelocity",HRP)
+		bg=Instance.new("BodyGyro",HRP)
+		bv.MaxForce=Vector3.new(math.huge,math.huge,math.huge)
+		bg.MaxTorque=Vector3.new(math.huge,math.huge,math.huge)
+		FlyConnection = RunService.RenderStepped:Connect(function()
+			local cam=workspace.CurrentCamera
+			local dir=Humanoid.MoveDirection
+			bv.Velocity=(cam.CFrame.LookVector*dir.Z + cam.CFrame.RightVector*dir.X)*flyspeed
+			bg.CFrame=cam.CFrame
+		end)
+	else
+		if bv then bv:Destroy() end
+		if bg then bg:Destroy() end
+		if FlyConnection then FlyConnection:Disconnect() end
+	end
+end})
 
-FlyTab:AddSlider({
-	Name="Fly Speed",
-	Min=20,Max=250,Default=90,
-	Callback=function(v) flyspeed=v end
-})
-
-FlyTab:AddToggle({
-	Name="Fly",
-	Callback=function(state)
-		flying=state
-
-		if flying then
-			bv=Instance.new("BodyVelocity",HRP)
-			bg=Instance.new("BodyGyro",HRP)
-
-			bv.MaxForce=Vector3.new(math.huge,math.huge,math.huge)
-			bg.MaxTorque=Vector3.new(math.huge,math.huge,math.huge)
-
-			RunService.RenderStepped:Connect(function()
-				if not flying then return end
-				local cam=workspace.CurrentCamera
-				local dir=Humanoid.MoveDirection
-
-				bv.Velocity=(cam.CFrame.LookVector*dir.Z+
-					cam.CFrame.RightVector*dir.X)*flyspeed
-
-				bg.CFrame=cam.CFrame
+-- DEV TAB
+local DevTab = Window:MakeTab({Name="Dev Tools 🛠️"})
+local FPSBoost=false
+DevTab:AddToggle({Name="FPS Boost",Callback=function(v)
+	FPSBoost=v
+	if v then
+		for _,obj in ipairs(workspace:GetDescendants()) do
+			if obj:IsA("BasePart") then
+				obj.Material=Enum.Material.SmoothPlastic
+				obj.Reflectance=0
 			end
-		else
-			if bv then bv:Destroy() end
-			if bg then bg:Destroy() end
 		end
 	end
-})
+end})
+DevTab:AddButton({Name="Reset Character",Callback=function() Player.Character:BreakJoints() end})
 
-------------------------------------------------
--- TELEPORT 📍
-------------------------------------------------
-local TpTab=Window:MakeTab({Name="Teleport 📍"})
-local mouse=Player:GetMouse()
-local clicktp=false
+-- CAMERA TAB
+local CamTab = Window:MakeTab({Name="Camera 🎥"})
+local FOV=70
+CamTab:AddSlider({Name="Field Of View",Min=40,Max=120,Default=70,Callback=function(v) FOV=v workspace.CurrentCamera.FieldOfView=FOV end})
 
-TpTab:AddToggle({
-	Name="Click TP",
-	Callback=function(v) clicktp=v end
-})
-
-mouse.Button1Down:Connect(function()
-	if clicktp then
-		HRP.CFrame=CFrame.new(mouse.Hit.Position+Vector3.new(0,3,0))
-	end
-end)
-
-TpTab:AddButton({
-	Name="Rejoin Server",
-	Callback=function()
-		TPService:Teleport(game.PlaceId,Player)
-	end
-})
-
-------------------------------------------------
 OrionLib:Init()
