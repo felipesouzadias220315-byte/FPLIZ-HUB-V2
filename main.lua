@@ -1,147 +1,43 @@
---==================================
--- FPLIZ HUB SUPREMO VIP 👑 | WORKING
---==================================
-
-print("✅ FPLIZ HUB INICIOU")
+print("1️⃣ Script começou")
 
 repeat task.wait() until game:IsLoaded()
+print("2️⃣ Game carregado")
 
--- SERVICES
-local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
-local UIS = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-local TeleportService = game:GetService("TeleportService")
+local success, OrionLib = pcall(function()
+	print("3️⃣ Tentando carregar Orion...")
+	return loadstring(game:HttpGet(
+	"https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+end)
 
--- CHARACTER
-local Character, Humanoid, HRP
-
-local function LoadCharacter(char)
-	Character = char
-	Humanoid = char:WaitForChild("Humanoid")
-	HRP = char:WaitForChild("HumanoidRootPart")
+if success then
+	print("4️⃣ Orion carregou ✅")
+else
+	warn("❌ Orion NÃO carregou")
+	return
 end
 
-LoadCharacter(Player.Character or Player.CharacterAdded:Wait())
-Player.CharacterAdded:Connect(LoadCharacter)
-
--- NOTIFICAÇÃO TESTE
-pcall(function()
-	game.StarterGui:SetCore("SendNotification",{
-		Title="FPLIZ HUB 👑",
-		Text="Script carregado!",
-		Duration=5
-	})
-end)
-
--- ORION LIB (CORRETO)
-local OrionLib = loadstring(game:HttpGet(
-"https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
-
 local Window = OrionLib:MakeWindow({
-	Name="FPLIZ HUB SUPREMO VIP 👑",
-	HidePremium=false,
-	SaveConfig=true,
-	ConfigFolder="FplizV2"
+	Name="DEBUG HUB",
+	SaveConfig=false
 })
 
--- PLAYER TAB
-local PlayerTab = Window:MakeTab({Name="Player ⚡"})
+print("5️⃣ Window criada")
 
-local WalkSpeed = 16
-local JumpPower = 50
-local InfiniteJump = false
-
-PlayerTab:AddSlider({
-	Name="Velocidade",
-	Min=16,
-	Max=200,
-	Default=16,
-	Callback=function(v)
-		WalkSpeed = v
-	end
+local Tab = Window:MakeTab({
+	Name="Teste"
 })
 
-PlayerTab:AddSlider({
-	Name="Pulo",
-	Min=50,
-	Max=250,
-	Default=50,
-	Callback=function(v)
-		JumpPower = v
-	end
-})
+print("6️⃣ Aba criada")
 
-PlayerTab:AddToggle({
-	Name="Pulo Infinito",
-	Default=false,
-	Callback=function(v)
-		InfiniteJump = v
-	end
-})
-
-RunService.RenderStepped:Connect(function()
-	if Humanoid then
-		Humanoid.WalkSpeed = WalkSpeed
-		Humanoid.JumpPower = JumpPower
-	end
-end)
-
-UIS.JumpRequest:Connect(function()
-	if InfiniteJump and Humanoid then
-		Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-	end
-end)
-
--- BROOKHAVEN TAB
-local BrookTab = Window:MakeTab({Name="Brookhaven 🏠"})
-
-BrookTab:AddButton({
-	Name="Teleport Banco",
+Tab:AddButton({
+	Name="Botão Teste",
 	Callback=function()
-		if HRP then
-			HRP.CFrame = CFrame.new(-33,25,-170)
-		end
+		print("BOTÃO FUNCIONOU ✅")
 	end
 })
 
-local Noclip = false
-
-BrookTab:AddToggle({
-	Name="Noclip",
-	Default=false,
-	Callback=function(v)
-		Noclip = v
-	end
-})
-
-RunService.Stepped:Connect(function()
-	if Noclip and Character then
-		for _,v in pairs(Character:GetDescendants()) do
-			if v:IsA("BasePart") then
-				v.CanCollide = false
-			end
-		end
-	end
-end)
-
--- CONFIG TAB
-local ConfigTab = Window:MakeTab({Name="Config ⚙️"})
-
-ConfigTab:AddButton({
-	Name="Rejoin Server",
-	Callback=function()
-		TeleportService:Teleport(game.PlaceId, Player)
-	end
-})
-
-ConfigTab:AddButton({
-	Name="Fechar Hub",
-	Callback=function()
-		OrionLib:Destroy()
-	end
-})
+print("7️⃣ Botão criado")
 
 OrionLib:Init()
 
-print("✅ FPLIZ HUB CARREGADO COMPLETO")
+print("8️⃣ HUB FINALIZADO ✅")
